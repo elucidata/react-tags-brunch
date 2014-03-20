@@ -1,2 +1,2 @@
-# {{NAME}}-brunch 1.5.0 (1 January 2013)
+# react-tags-brunch 1.1.0
 * Initial release

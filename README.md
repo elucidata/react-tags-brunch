@@ -1,22 +1,108 @@
-## {{NAME}}-brunch
-Adds {{DESCRIPTION}} support to
+## react-tags-brunch
+
+Adds [React.js](http://facebook.github.io/react/) tag interpolation to 
 [brunch](http://brunch.io).
 
+Scans your javascript and replaces calls to `this.div` to `React.DOM.div` 
+(`div` used as an example, will interpolate any tag found in `React.DOM`)
+
+I use this with CoffeeScript to make writing components more joyful.
+
+```coffeescript
+MyComponent= React.createClass
+  displayName: 'MyComponent'
+
+  render: ->
+    (@div null, "Hello")
+
+module.exports= MyComponent
+```
+
+Eventual output:
+
+```javascript
+var MyComponent;
+
+MyComponent = React.createClass({
+  displayName: 'MyComponent',
+  render: function() {
+    return React.DOM.div(null, "Hello");
+  }
+});
+
+module.exports = MyComponent;
+```
+
+### Optional Configuration
+
+Example `brunch-config.coffee`:
+
+```coffeescript
+exports.config =
+  plugins:
+    reactTags:
+      fileFilter: /^(app|test)/
+      blacklist: 'object data map var'.split(' ')
+      verbose: no
+
+  # Usual brunch config stuf...
+  files:
+    javascripts:
+      joinTo: 'app.js'
+    stylesheets:
+      joinTo: 'app.css'
+    templates:
+      joinTo: 'app.js'
+```
+
+### Blacklist
+
+There are some dom components that mean something special to javascript (`var`),
+require a non-dot-notation syntax to use, or are just too common in typical
+component definition (`map`). For these components you'll need to postfix 
+the nodename with an underscore (`_`), like this:
+
+```coffeescript
+render: ->
+  (@object_ null)
+```
+
+```javascript
+render: function() {
+  return React.DOM.object(null)
+}
+```
+
+### React Coffee
+
+If you use the [elucidata-react-coffee](https://github.com/elucidata/react-coffee)
+micro-lib, you can use CoffeeScript classes (and the editor tooling around them) to
+define React Components:
+
+```coffeescript
+class MyComponent extends React.Component
+  render: ->
+    (@div null, "Hello")
+
+module.exports= MyComponent.reactify()
+```
+
 ## Usage
-Install the plugin via npm with `npm install --save {{NAME}}-brunch`.
+
+Install the plugin via npm with `npm install --save react-tags-brunch`.
 
 Or, do manual install:
 
-* Add `"{{NAME}}-brunch": "x.y.z"` to `package.json` of your brunch app.
+* Add `"react-tags-brunch": "x.y.z"` to `package.json` of your brunch app.
   Pick a plugin version that corresponds to your minor (y) brunch version.
 * If you want to use git version of plugin, add
-`"{{NAME}}-brunch": "git+ssh://git@github.com:brunch/{{NAME}}-brunch.git"`.
+`"react-tags-brunch": "git+ssh://git@github.com:brunch/react-tags-brunch.git"`.
 
 ## License
 
 The MIT License (MIT)
 
-Copyright (c) 2012-2013 Paul Miller (http://paulmillr.com)
+Copyright (c) 2014 Matt McCray (http://elucidata.net)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
