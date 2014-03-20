@@ -24,6 +24,8 @@ module.exports = class ReactTagsPlugin
 
       output= source.replace tagParser, (fragment, tag)->
 
+        return fragment if tag in blacklist
+
         if escapedTag.test(tag)
           shortTag= tag.substring(0, tag.length - 1)
 

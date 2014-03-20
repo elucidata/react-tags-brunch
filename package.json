@@ -1,6 +1,6 @@
 {
   "name": "react-tags-brunch",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Adds React.js tag interpolation to brunch.",
   "author": "Matt McCray <matt@elucidata.net>",
   "homepage": "https://github.com/elucidata/react-tags-brunch",
