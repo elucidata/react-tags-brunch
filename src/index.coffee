@@ -1,6 +1,6 @@
 
 react_dom= require('react').DOM
-tagParser= /this\.([\w|_]*)\(/g
+tagParser= /_?this\.([\w|_]*)\(/g
 escapedTag= /[\w]*_$/
 
 module.exports = class ReactTagsPlugin
@@ -36,14 +36,14 @@ module.exports = class ReactTagsPlugin
         if react_dom.hasOwnProperty(tag) #React.DOM[ tag ]?
           taglist.push tag unless tag in taglist
           return "React.DOM.#{ tag }("
-        
+
         return fragment
 
     catch err
       console.log "ERROR", err if @verbose
       return callback err.toString()
-    
+
     console.log " - #{params.path}: #{ taglist.sort().join ', ' }" if @verbose and taglist.length > 0
-    
+
     callback null, data:output
 
