@@ -1,7 +1,4 @@
-
-react_dom= require('react').DOM
-tagParser= /_?this\.([\w|_]*)\(/g
-escapedTag= /[\w]*_$/
+parser= require('./tag-parser')
 
 module.exports = class ReactTagsPlugin
   brunchPlugin: yes
@@ -19,31 +16,14 @@ module.exports = class ReactTagsPlugin
     return callback null, data:source unless @filter.test(params.path)
 
     try
-      blacklist= @blacklist
-      taglist= []
-
-      output= source.replace tagParser, (fragment, tag)->
-
-        return fragment if tag in blacklist
-
-        if escapedTag.test(tag)
-          shortTag= tag.substring(0, tag.length - 1)
-
-          if shortTag in blacklist
-            taglist.push shortTag unless shortTag in taglist
-            return "React.DOM.#{ shortTag }("
-
-        if react_dom.hasOwnProperty(tag) #React.DOM[ tag ]?
-          taglist.push tag unless tag in taglist
-          return "React.DOM.#{ tag }("
-
-        return fragment
+      output= parser(source, @blacklist)
+      taglist= parser.lastTags()
 
     catch err
       console.log "ERROR", err if @verbose
       return callback err.toString()
 
-    console.log " - #{params.path}: #{ taglist.sort().join ', ' }" if @verbose and taglist.length > 0
+    if @verbose and taglist.length > 0
+      console.log " - #{params.path}: #{ taglist.sort().join ', ' }"
 
     callback null, data:output
-
